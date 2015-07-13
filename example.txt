@@ -1,0 +1,15 @@
+#noun
+carrot
+tea-kettle
+beetle
+knife
+sock
+
+#imperative
+touch
+eat
+look at
+render judgement upon
+
+#sentence
+{imperative} the {noun}
