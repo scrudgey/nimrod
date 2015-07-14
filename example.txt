@@ -10,7 +10,11 @@ sock
 touch
 eat
 look at
-render judgement upon
+render judgment upon
 
 #sentence
 {imperative} the {noun}
+{noun} is {noun}
+
+#default
+{sentence}
