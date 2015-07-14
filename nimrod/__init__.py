@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Python package for processing context-free randomized text.
+"""Lightweight python package for context-free random text generation.
 """
 __author__ = 'Ryan Foltz'
 __email__ = 'scrudgey@gmail.com'
