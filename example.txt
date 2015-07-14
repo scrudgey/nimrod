@@ -4,6 +4,7 @@ tea-kettle
 beetle
 knife
 sock
+{noun}-thing
 
 #imperative
 touch
