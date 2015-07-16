@@ -4,8 +4,14 @@ of generating general, randomized text.
 """
 import re
 import random
-import hashlib
 import os
+
+class ParseVariableError(Exception):
+  """Exception for errors in assigning or parsing nimrod variables.
+  """
+  def __init__(self, message):
+    super(ParseVariableError, self).__init__(message)
+    self.message = message
 
 class grammar(object):
   """Base class contains the definitions for a series of grammatical symbols.
@@ -14,12 +20,14 @@ class grammar(object):
   """
   symbol_hook = re.compile(r'(\{(.+?)\})')
   prob_hook = re.compile(r'(<([\.\d]+)\|(.+?)>)')
-  #(\{([\d.]+)\|(.+?\}?.*?)\})
+  var_ref_hook = re.compile(r'\$(\w+)')
+  var_assign_hook = re.compile(r'\$(\w+)=(\w+)')
 
   def __init__(self):
     self.symbols = {}
     self.path = None
     self.mtime = None
+    self.variables = {}
 
   def interpret(self, symbol, raw=False):
     """Return a random element from the dictionary for a given symbol.
@@ -32,6 +40,15 @@ class grammar(object):
     else:
       return '{'+symbol+'}'
 
+  def ref_var(self, var):
+    """Similar to interpret, but replace the variable reference with its value in the variables
+    dictionary. Else return blank string.
+    """
+    if var in self.variables:
+      return self.variables[var]
+    else:
+      return ''
+
   def parse(self, string, depth=0, **kwargs):
     """This is the main routine where the magic happens.
     Replace every instance of {symbol} in the string with a randomized entry
@@ -40,6 +57,22 @@ class grammar(object):
     self.check_hash()
 
     initial_string = string
+
+    # catch variable assignments $variable
+    for match in self.var_assign_hook.finditer(string):
+      print "assigning variable"
+      try:
+        self.variables[match.group(1)] = match.group(2)
+      except:
+        raise ParseVariableError("Could not assign variable.")
+      # import ipdb; ipdb.set_trace()
+      string = string.replace(match.group(0), '', 1)
+
+    # interpret variable references $variable=value
+    for match in self.var_ref_hook.finditer(string):
+      print "interpreting variable"
+      string = string.replace(match.group(0), self.ref_var(match.group(1)), 1)
+      # string = string.replace(match.group(0), '', 1)
 
     # interpret probability syntax {p|string}:
     for match in self.prob_hook.finditer(string):
@@ -53,7 +86,7 @@ class grammar(object):
     for match in self.symbol_hook.finditer(string):
       string = string.replace(match.group(1), self.interpret(match.group(2)), 1)
 
-    # include optional variable replacement
+    # include optional variable replacement {keyword}
     if kwargs:
       string = string.format(**kwargs)
 
