@@ -19,5 +19,27 @@ render judgment upon
 {imperative} the {noun}
 {noun} is {noun}
 
+
+
+#set-var
+$var=dimestore
+$var=dotty
+$var=no
+
+#quiet-set-var2
+$var is my friend $var2=2
+i think. $var2=hello
+normalstuff$var2=freedom
+
+#var-test
+hello my name is $var
+today i saw a $var. $frog is not a set variable.
+
+#var-symbol
+$var3={noun}
+$var3={imperative}
+
+
+
 #default
 {sentence}

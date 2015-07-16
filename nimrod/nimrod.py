@@ -6,22 +6,37 @@ import re
 import random
 import os
 
+#TODO: define comments in the definition file
+
 class ParseVariableError(Exception):
-  """Exception for errors in assigning or parsing nimrod variables.
-  """
+  """Exception for errors in assigning or parsing nimrod variables."""
   def __init__(self, message):
     super(ParseVariableError, self).__init__(message)
     self.message = message
 
 class grammar(object):
-  """Base class contains the definitions for a series of grammatical symbols.
-  It can interpret a symbol, which is a random process, or parse a string,
-  which replaces each symbol with an interpretation.
+  """The grammar object loads a grammar defined in an external file via the load()
+  method. It can then parse() arbitrary strings for symbols defined in its loaded dictionary.
+  ----------
+  SYNTAX:
+
+  {symbol}:
+    nimrod will replace {symbol} by a random entry from its definition of {symbol}.
+
+  <p|string>:
+    nimrod will insert "string" with probability p
+
+  $variable=value:
+    this will define variable $variable to have value "value" for all following strings.
+
+  $varable:
+    nimrod will replace this $variable reference with its value, if set earlier. If $variable
+    is not set, this reference will be replaced by empty string.
   """
   symbol_hook = re.compile(r'(\{(.+?)\})')
   prob_hook = re.compile(r'(<([\.\d]+)\|(.+?)>)')
   var_ref_hook = re.compile(r'\$(\w+)')
-  var_assign_hook = re.compile(r'\$(\w+)=(\w+)')
+  var_assign_hook = re.compile(r' \$(\w+)=([\w\{\}-]+)')
 
   def __init__(self):
     self.symbols = {}
@@ -30,8 +45,7 @@ class grammar(object):
     self.variables = {}
 
   def interpret(self, symbol, raw=False):
-    """Return a random element from the dictionary for a given symbol.
-    """
+    """Return a random element from the dictionary for a given symbol."""
     if symbol in self.symbols:
       if not raw:
         return self.parse(random.choice(self.symbols[symbol]))
@@ -49,30 +63,33 @@ class grammar(object):
     else:
       return ''
 
+  def reset(self):
+    """Clear all stored variable values."""
+    self.variables={}
+
   def parse(self, string, depth=0, **kwargs):
     """This is the main routine where the magic happens.
     Replace every instance of {symbol} in the string with a randomized entry
     from that symbol's definition.
+
+    Pass arbitrary keywords to
     """
     self.check_hash()
 
     initial_string = string
 
-    # catch variable assignments $variable
+    # catch variable assignments $variable=value
     for match in self.var_assign_hook.finditer(string):
-      print "assigning variable"
+      # import ipdb; ipdb.set_trace()
       try:
         self.variables[match.group(1)] = match.group(2)
       except:
         raise ParseVariableError("Could not assign variable.")
-      # import ipdb; ipdb.set_trace()
       string = string.replace(match.group(0), '', 1)
 
-    # interpret variable references $variable=value
+    # interpret variable references $variable
     for match in self.var_ref_hook.finditer(string):
-      print "interpreting variable"
       string = string.replace(match.group(0), self.ref_var(match.group(1)), 1)
-      # string = string.replace(match.group(0), '', 1)
 
     # interpret probability syntax {p|string}:
     for match in self.prob_hook.finditer(string):
@@ -98,31 +115,31 @@ class grammar(object):
 
   def run(self):
     """Interpret the default string, which is defined in a dictionary
-    as #default.
+    under #default.
     """
     self.check_hash()
     print self.interpret('default')
 
   def check_hash(self):
-    """Check to see if the file has changed since we last run.
+    """Check to see if the file has changed.
     If it has, reload the file.
     """
     statbuf = os.stat(self.path)
     if self.mtime != statbuf.st_mtime:
-      print "file updated. loading..."
       self.load(self.path)
 
   def load(self, path):
-    """Load the grammar definition at path into a new dictionary.
-    """
+    """Load the grammar definition at path into a new dictionary."""
+    # initialize variables
     self.symbols = {}
     self.path = path
-
     catmatch = re.compile(r'#')
 
+    # store the file modification time
     statbuf = os.stat(self.path)
     self.mtime = statbuf.st_mtime
 
+    # parse the definition file
     current_key = ''
     with open(path, 'r') as f:
       for line in f:
