@@ -12,6 +12,9 @@ eat
 look at
 render judgment upon
 
+#test
+{a} isn't a symbol like {noun}
+
 #sentence
 {imperative} the {noun}
 {noun} is {noun}

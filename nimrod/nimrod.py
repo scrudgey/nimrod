@@ -24,9 +24,9 @@ class grammar(object):
       else:
         return random.choice(self.symbols[symbol])
     else:
-      return None
+      return '{'+symbol+'}'
 
-  def parse(self, string, depth=0):
+  def parse(self, string, depth=0, **kwargs):
     """This is the main routine where the magic happens.
     Replace every instance of {symbol} in the string with a randomized entry
     from that symbol's definition.
@@ -34,8 +34,11 @@ class grammar(object):
     initial_string = string
     for match in self.symbol_hook.finditer(string):
       string = string.replace(match.group(1), self.interpret(match.group(2)), 1)
+    if kwargs:
+      string = string.format(**kwargs)
+
     if initial_string != string and depth < 10:
-      return self.parse(string, depth=depth + 1)
+      return self.parse(string, depth=depth + 1, **kwargs)
     else:
       return string
 
