@@ -5,6 +5,7 @@ of generating general, randomized text.
 import re
 import random
 import os
+import logging
 
 #TODO: define comments in the definition file
 
@@ -41,7 +42,7 @@ class grammar(object):
   symbol_hook = re.compile(r'(\{(.+?)\})')
   prob_hook = re.compile(r'(<([\.\d]+)\|(.+?)>)')
   var_ref_hook = re.compile(r'\$(\w+)')
-  var_assign_hook = re.compile(r' \$(\w+)=([\w\{\}-]+)')
+  var_assign_hook = re.compile(r'(\W|^)\$(\w+)=([\w\{\}-]+)')
   var_lazy_assign_hook = re.compile(r' \$\$(\w+)$')
 
   def __init__(self):
@@ -49,6 +50,12 @@ class grammar(object):
     self.path = None
     self.mtime = None
     self.variables = {}
+
+  def start_log(self):
+    logging.basicConfig(filename='out.log', level=logging.INFO, filemode='w')
+
+  def stop_log(self):
+    logging.basicConfig(level=logging.WARNING)
 
   def interpret(self, symbol, raw=False):
     """Return a random element from the dictionary for a given symbol."""
@@ -81,14 +88,16 @@ class grammar(object):
     Pass arbitrary keywords to
     """
     self.check_hash()
-
     initial_string = string
+
+    logging.info('starting parse at depth %s', depth)
+    logging.info(string)
 
     # catch variable assignments $variable=value
     for match in self.var_assign_hook.finditer(string):
       # import ipdb; ipdb.set_trace()
       try:
-        self.variables[match.group(1)] = match.group(2)
+        self.variables[match.group(2)] = match.group(3)
       except:
         raise ParseVariableError("Could not assign variable.")
       string = string.replace(match.group(0), '', 1)
@@ -98,10 +107,6 @@ class grammar(object):
       rest = string.replace(match.group(0), '', 1)
       self.variables[match.group(1)] = rest
       string = rest
-
-    # interpret variable references $variable
-    for match in self.var_ref_hook.finditer(string):
-      string = string.replace(match.group(0), self.ref_var(match.group(1)), 1)
 
     # interpret probability syntax {p|string}:
     for match in self.prob_hook.finditer(string):
@@ -114,6 +119,10 @@ class grammar(object):
     # interpret symbol replacement {symbol}
     for match in self.symbol_hook.finditer(string):
       string = string.replace(match.group(1), self.interpret(match.group(2)), 1)
+
+    # interpret variable references $variable
+    for match in self.var_ref_hook.finditer(string):
+      string = string.replace(match.group(0), self.ref_var(match.group(1)), 1)
 
     # include optional variable replacement {keyword}
     if kwargs:
