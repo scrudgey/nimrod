@@ -1,0 +1,278 @@
+#story
+{set-name}{set-name2}{body}
+
+#body
+{intro-sentence} {dialogue}
+
+#dialogue
+"{interjection}," said $name. "{meta-statement}"
+$name said, "{statement}!"
+"{address} $name2," said $name. "{meta-statement}."
+
+#meta-statement
+{statement}<0.5|, {bah}>.
+{statement}<0.5|, {tag-on}>.
+
+#statement
+{disagreement} {point}
+{bah} {point}
+
+#point
+<0.65|{point-intro} >{subject}<0.5| {intensifier}> {does} {topic}
+<0.65|{point-intro} >{plur-subject} {plur-predicate}
+
+#address
+my dear
+now you listen to me
+
+#set-name
+$name=Bob
+$name=Gordy
+$name=Blotto
+
+#set-name2
+$name2=Alice
+$name2=Judy
+$name2=Brumpo
+
+#intro-sentence
+$name and $name2 {together-act}.
+Listen closely and I will tell the tale of $name and $name2.
+Things were getting heated as $name and $name2 {together-act}.
+Written here in the dust is a dialogue between $name and $name2.
+$name {together-act} with $name2.
+
+#together-act
+ate {food}
+drank {drink}
+ate {food} and drank {drink}
+walked down the path
+argued about {topic}
+spoke animatedly about {topic}
+conspired around the fireplace
+
+#generic-thing
+{food}
+{drink}
+{subject}
+{topic}
+
+#food
+tea-cakes
+wood shavings
+tacos
+vegan club sandwiches
+
+#drink
+beer
+coffee
+tea
+whiskey
+
+
+
+#subject
+your life
+the planet pluto
+organic produce
+poppin-fresh freshness
+rap music
+a single animal
+the human being in abstract
+the light from the moon
+an invisible force
+praise and adulation
+wetness
+the wealth of {plur-subject}
+
+#plur-subject
+good feelings
+atoms<0.5| and molecules>
+little tiny screws and widgets
+buckets full of sand
+{plur-subject} and {plur-subject}
+clouds of gnats
+messages from space aliens
+clouds of dust
+polite gestures
+noodles
+infectious diseases
+
+#plur-predicate
+are {measure} {plur-subject}<0.5| {measure-category}>
+are actually {adjective}<0.6| {measure-category}>
+<0.5|{plur-intensifier} >{plur-verb}<0.3| and {plur-verb}>
+
+#adjective
+real
+sublime
+useful
+
+#plur-intesifier
+often
+quite commonly
+, seeimingly at random,
+and not {plur-subject}
+together with {subject}
+
+
+#plur-verb
+are the deciding factor in {topic}
+find their way into my dreams
+cause heated debate
+are found most often at night
+are frequently confused with {subject}
+
+
+#does
+approaches
+measures up to
+compares to
+impacts
+informs
+deconstructs
+forms a coherent narrative of
+accounts for
+is the primary cause of
+is the sole reason for
+is the principal function of
+results from
+is confused with
+
+#topic
+the existence of god
+the nature of the good
+freedom and liberty
+tax law
+who had the better hair
+the pope
+our duty to strangers
+the social importance of {subject}
+man's inhumanity toward man
+
+
+
+#measure
+superior to
+inferior to
+equal<0.5| in every way> to
+better than
+
+#measure-category
+in my eyes
+for cost effectiveness
+for their beauty
+in every way
+
+#intensifier
+can't even
+will not
+absolutely must
+never
+always
+won't ever
+has never been seen to
+can't possibly
+
+
+
+#insult
+dodo brain
+nimrod
+australopithecus
+demented {insult}
+horrifying {insult}
+pre-hominid
+mongoloid
+frightfully dense
+
+#interjection
+You really are a {insult}
+That's not right at all
+I disagree
+Are you sure
+What do you think about this one
+No no no
+
+#recoil
+recoil in horror
+stand agape
+laugh
+shudder
+
+#opinion
+opinions
+thoughts
+theories
+writings
+screeds
+<0.5|unintelligent >shrieking
+babbling
+
+#rethink
+go back to the drawing board with
+rethink
+think hard about
+
+#disagreement
+Your {insult}-nature has naturally confused {generic-thing} with {generic-thing}.
+You need to {rethink} {topic} and while you're at it, {subject}!
+I can't begin to describe your ineptitude<0.5| especially with regard to {topic}>.
+I {recoil} to consider your {insult} {opinion} on the matter.
+Do you even understand what I am trying to tell you?
+Shut up for a second and listen!
+Have you considered this though?
+Allow me to explain.
+I've just decided upon the matter.
+
+#bah
+why, the nerve of it!
+bah!
+to even think of it!
+does this make sense to you?
+i've never heard such a thing.
+what rot!
+it all makes perfect sense!
+just think of it!
+do you see?
+I've got good money on the line that
+
+#time-ago
+yesterday
+a week ago
+a long time ago
+some time ago
+a couple days ago
+
+#solitary-act
+looked deep within myself
+thought long and hard about {topic}
+peered intently into a dollhouse window
+dug around in my backyard
+found a message in a bottle
+
+#concluding
+and concluded that
+and decided that
+and wished that
+and realized that
+
+
+
+
+#point-intro
+{time-ago} I {solitary-act}, {concluding}
+It is plain that
+I'll bet you that
+I do believe
+{time-ago} you were saying that
+You can't disagree that
+Tell me you don't believe that old lie that
+
+#tag-on
+although many may disagree
+although that's not what you'll read in the history books
+and I stand by that
+which they teach in some academies around the world
+which is the subject of my next book
+
