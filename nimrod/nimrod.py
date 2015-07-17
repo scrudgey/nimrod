@@ -29,14 +29,20 @@ class grammar(object):
   $variable=value:
     this will define variable $variable to have value "value" for all following strings.
 
+  string $$variable
+    this "lazy variable assignment" will assign $variable the value of the string.
+    Must come at the end of a line.
+
   $varable:
     nimrod will replace this $variable reference with its value, if set earlier. If $variable
     is not set, this reference will be replaced by empty string.
+
   """
   symbol_hook = re.compile(r'(\{(.+?)\})')
   prob_hook = re.compile(r'(<([\.\d]+)\|(.+?)>)')
   var_ref_hook = re.compile(r'\$(\w+)')
   var_assign_hook = re.compile(r' \$(\w+)=([\w\{\}-]+)')
+  var_lazy_assign_hook = re.compile(r' \$\$(\w+)$')
 
   def __init__(self):
     self.symbols = {}
@@ -65,7 +71,7 @@ class grammar(object):
 
   def reset(self):
     """Clear all stored variable values."""
-    self.variables={}
+    self.variables = {}
 
   def parse(self, string, depth=0, **kwargs):
     """This is the main routine where the magic happens.
@@ -86,6 +92,12 @@ class grammar(object):
       except:
         raise ParseVariableError("Could not assign variable.")
       string = string.replace(match.group(0), '', 1)
+
+    # catch lazy variable assignment "string $$var"
+    for match in self.var_lazy_assign_hook.finditer(string):
+      rest = string.replace(match.group(0), '', 1)
+      self.variables[match.group(1)] = rest
+      string = rest
 
     # interpret variable references $variable
     for match in self.var_ref_hook.finditer(string):
