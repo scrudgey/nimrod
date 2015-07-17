@@ -51,12 +51,6 @@ class grammar(object):
     self.mtime = None
     self.variables = {}
 
-  def start_log(self):
-    logging.basicConfig(filename='out.log', level=logging.INFO, filemode='w')
-
-  def stop_log(self):
-    logging.basicConfig(level=logging.WARNING)
-
   def interpret(self, symbol, raw=False):
     """Return a random element from the dictionary for a given symbol."""
     if symbol in self.symbols:
@@ -95,7 +89,6 @@ class grammar(object):
 
     # catch variable assignments $variable=value
     for match in self.var_assign_hook.finditer(string):
-      # import ipdb; ipdb.set_trace()
       try:
         self.variables[match.group(2)] = match.group(3)
       except:
@@ -110,7 +103,6 @@ class grammar(object):
 
     # interpret probability syntax {p|string}:
     for match in self.prob_hook.finditer(string):
-      # import ipdb; ipdb.set_trace()
       if random.random() < float(match.group(2)):
         string = string.replace(match.group(0), match.group(3), 1)
       else:
@@ -151,7 +143,6 @@ class grammar(object):
 
   def load(self, path):
     """Load the grammar definition at path into a new dictionary."""
-    # initialize variables
     self.symbols = {}
     self.path = path
     catmatch = re.compile(r'#')
