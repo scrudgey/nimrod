@@ -142,13 +142,15 @@ class Grammar(object):
     if self.mtime != statbuf.st_mtime:
       self.load(self.path)
 
-  def load(self, path):
+  def load(self, path, reset_loaded=True):
     """Load the grammar definition at path into a new dictionary."""
+    if reset_loaded:
+      self.loaded_files = []
     self.symbols = {}
     self.path = path
     imports = []
     catmatch = re.compile(r'#')
-    impmatch = re.compile(r'# include')
+    impmatch = re.compile(r'#import ([\w\.]+)')
 
     # store the file modification time
     statbuf = os.stat(self.path)
@@ -163,9 +165,9 @@ class Grammar(object):
         if not line: continue
         match = catmatch.search(line)
         if match:
-          import_match = impmatch(line)
+          import_match = impmatch.search(line)
           if import_match:
-            imports.append(impmatch.groups[1])
+            imports.append(import_match.group(1))
           else:
             current_key = line[1:]
         if not match:
@@ -177,7 +179,8 @@ class Grammar(object):
       # watch the fuck out for circular imports!!!
       # i try to catch them here but who knows if this will work for all cases
       if imp not in self.loaded_files:
+        self.loaded_files.append(imp)
         working_dir = os.path.dirname(path)
         new_path = os.path.join(working_dir, imp)
-        self.load(new_path)
+        self.load(new_path, reset_loaded=False)
 

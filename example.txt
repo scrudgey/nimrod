@@ -1,4 +1,4 @@
-#import example_include
+#import example_include.txt
 
 #noun
 carrot
