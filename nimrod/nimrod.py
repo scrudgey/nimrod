@@ -15,7 +15,7 @@ class ParseVariableError(Exception):
     super(ParseVariableError, self).__init__(message)
     self.message = message
 
-class grammar(object):
+class Grammar(object):
   """The grammar object loads a grammar defined in an external file via the load()
   method. It can then parse() arbitrary strings for symbols defined in its loaded dictionary.
   ----------
@@ -50,6 +50,7 @@ class grammar(object):
     self.path = None
     self.mtime = None
     self.variables = {}
+    self.loaded_files = []
 
   def interpret(self, symbol, raw=False):
     """Return a random element from the dictionary for a given symbol."""
@@ -145,7 +146,9 @@ class grammar(object):
     """Load the grammar definition at path into a new dictionary."""
     self.symbols = {}
     self.path = path
+    imports = []
     catmatch = re.compile(r'#')
+    impmatch = re.compile(r'# include')
 
     # store the file modification time
     statbuf = os.stat(self.path)
@@ -154,14 +157,27 @@ class grammar(object):
     # parse the definition file
     current_key = ''
     with open(path, 'r') as f:
+      self.loaded_files.append(path)
       for line in f:
         line = line.rstrip()
         if not line: continue
         match = catmatch.search(line)
         if match:
-          current_key = line[1:]
+          import_match = impmatch(line)
+          if import_match:
+            imports.append(impmatch.groups[1])
+          else:
+            current_key = line[1:]
         if not match:
           items = self.symbols.get(current_key, [])
           items.append(line)
           self.symbols[current_key] = items
+
+    for imp in imports:
+      # watch the fuck out for circular imports!!!
+      # i try to catch them here but who knows if this will work for all cases
+      if imp not in self.loaded_files:
+        working_dir = os.path.dirname(path)
+        new_path = os.path.join(working_dir, imp)
+        self.load(new_path)
 

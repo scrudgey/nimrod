@@ -5,4 +5,4 @@ __author__ = 'Ryan Foltz'
 __email__ = 'scrudgey@gmail.com'
 __version__ = '0.1.0'
 
-from nimrod import *
+from .nimrod import Grammar
