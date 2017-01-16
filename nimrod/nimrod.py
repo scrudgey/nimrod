@@ -27,7 +27,7 @@ class Grammar(object):
   <p|string>:
     nimrod will insert "string" with probability p
 
-  $variable=value:
+  $variable="value":
     this will define variable $variable to have value "value" for all following strings.
 
   string $$variable
@@ -42,7 +42,7 @@ class Grammar(object):
   symbol_hook = re.compile(r'(\{(.+?)\})')
   prob_hook = re.compile(r'(<([\.\d]+)\|(.+?)>)')
   var_ref_hook = re.compile(r'\$(\w+)')
-  var_assign_hook = re.compile(r'(\W|^)\$(\w+)=([\w\{\}-]+)')
+  var_assign_hook = re.compile(r'(\W|^)\$(\w+)="(.+)"')
   var_lazy_assign_hook = re.compile(r' \$\$(\w+)$')
 
   def __init__(self):
