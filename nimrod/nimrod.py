@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
-"""Main routines for parsing specially-formatted context-free grammars and databases for the purpose
-of generating general, randomized text.
+"""Context-free grammars and databases for
+generating general, randomized text.
 """
 import re
 import random
 import os
 import logging
-
-#TODO: define comments in the definition file
 
 class ParseVariableError(Exception):
   """Exception for errors in assigning or parsing nimrod variables."""
@@ -21,23 +19,23 @@ class Grammar(object):
   ----------
   SYNTAX:
 
-  {symbol}:
-    nimrod will replace {symbol} by a random entry from its definition of {symbol}.
-
   <p|string>:
     nimrod will insert "string" with probability p
+    0.0 <= p <= 1.0
 
-  $variable="value":
-    this will define variable $variable to have value "value" for all following strings.
-
-  string $$variable
-    this "lazy variable assignment" will assign $variable the value of the string.
-    Must come at the end of a line.
+  {symbol}:
+    nimrod will replace {symbol} by a random entry in the definition of {symbol}.
 
   $varable:
     nimrod will replace this $variable reference with its value, if set earlier. If $variable
     is not set, this reference will be replaced by empty string.
 
+  $variable="value":
+    sets variable $variable to have value "value".
+
+  string $$variable
+    this "lazy variable assignment" will assign $variable the value of the string.
+    $$variable must come at the end of a line.
   """
   symbol_hook = re.compile(r'(\{(.+?)\})')
   prob_hook = re.compile(r'(<([\.\d]+)\|(.+?)>)')
@@ -45,27 +43,34 @@ class Grammar(object):
   var_assign_hook = re.compile(r'(\W|^)\$(\w+)="(.+)"')
   var_lazy_assign_hook = re.compile(r' \$\$(\w+)$')
 
+  logging.basicConfig(filename='debug.log', filemode='w', level=logging.DEBUG)
+
   def __init__(self):
     self.symbols = {}
     self.path = None
     self.mtime = None
     self.variables = {}
-    self.loaded_files = []
+    self.loaded_files = set()
 
-  def interpret(self, symbol, raw=False):
-    """Return a random element from the dictionary for a given symbol."""
+  def interpret(self, symbol, parse=True):
+    """Return a random element of {symbol}.
+
+    OPTIONAL ARGUMENTS:
+
+    parse: bool (default True)
+      True: parses the random element of {symbol}
+      False: return the literal random element of {symbol}
+    """
     if symbol in self.symbols:
-      if not raw:
+      if parse:
         return self.parse(random.choice(self.symbols[symbol]))
       else:
         return random.choice(self.symbols[symbol])
     else:
       return '{'+symbol+'}'
 
-  def ref_var(self, var):
-    """Similar to interpret, but replace the variable reference with its value in the variables
-    dictionary. Else return blank string.
-    """
+  def ref(self, var):
+    """Return the stored value of $var."""
     if var in self.variables:
       return self.variables[var]
     else:
@@ -76,23 +81,25 @@ class Grammar(object):
     self.variables = {}
 
   def parse(self, string, depth=0, **kwargs):
-    """This is the main routine where the magic happens.
-    Replace every instance of {symbol} in the string with a randomized entry
-    from that symbol's definition.
-
-    Pass arbitrary keywords to
+    """Process a string according to nimrod syntax with the loaded dictionary
+    of symbols.
     """
-    self.check_hash()
+    # TODO: elaborate the docstring here.
+
+    # make sure we have the most up-to-date definition file
+    self.check_file()
+    # cache initial state
     initial_string = string
 
-    logging.info('starting parse at depth %s', depth)
-    logging.info(string)
+    logging.info('parse depth {}: {}'.format(depth, string))
 
     # catch variable assignments $variable=value
     for match in self.var_assign_hook.finditer(string):
       try:
         self.variables[match.group(2)] = match.group(3)
+        logging.info('{} = {}'.format(match.group(2), match.group(3)))
       except:
+        logging.debug('{} = {}'.format(match.group(2), match.group(3)))
         raise ParseVariableError("Could not assign variable.")
       string = string.replace(match.group(0), '', 1)
 
@@ -115,26 +122,26 @@ class Grammar(object):
 
     # interpret variable references $variable
     for match in self.var_ref_hook.finditer(string):
-      string = string.replace(match.group(0), self.ref_var(match.group(1)), 1)
+      string = string.replace(match.group(0), self.ref(match.group(1)), 1)
 
     # include optional variable replacement {keyword}
     if kwargs:
       string = string.format(**kwargs)
 
-    # iterate
+    # recurse until we reach a stable orbit or depth limit is reached
     if initial_string != string and depth < 10:
       return self.parse(string, depth=depth + 1, **kwargs)
     else:
       return string
 
-  def run(self):
-    """Interpret the default string, which is defined in a dictionary
+  def default(self):
+    """Return the default string, which is optionally defined in a dictionary
     under #default.
     """
-    self.check_hash()
+    self.check_file()
     print self.interpret('default')
 
-  def check_hash(self):
+  def check_file(self):
     """Check to see if the file has changed.
     If it has, reload the file.
     """
@@ -142,14 +149,21 @@ class Grammar(object):
     if self.mtime != statbuf.st_mtime:
       self.load(self.path)
 
-  def load(self, path, reset_loaded=True):
-    """Load the grammar definition at path into a new dictionary."""
-    if reset_loaded:
-      self.loaded_files = []
-    self.symbols = {}
+  def load(self, path, append=False):
+    """Load the grammar definition at path.
+
+    OPTIONAL ARGUMENTS:
+    append: bool (default False)
+      if False, clear all symbols first.
+    """
+    if path[-4] != '.txt':
+      path = path + '.txt'
+    if not append:
+      self.loaded_files = set()
+      self.symbols = {}
     self.path = path
     imports = []
-    catmatch = re.compile(r'#')
+    defmatch = re.compile(r'#')
     impmatch = re.compile(r'#import ([\w\.]+)')
 
     # store the file modification time
@@ -159,11 +173,11 @@ class Grammar(object):
     # parse the definition file
     current_key = ''
     with open(path, 'r') as f:
-      self.loaded_files.append(path)
+      self.loaded_files.add(path)
       for line in f:
         line = line.rstrip()
         if not line: continue
-        match = catmatch.search(line)
+        match = defmatch.search(line)
         if match:
           import_match = impmatch.search(line)
           if import_match:
@@ -176,11 +190,10 @@ class Grammar(object):
           self.symbols[current_key] = items
 
     for imp in imports:
-      # watch the fuck out for circular imports!!!
-      # i try to catch them here but who knows if this will work for all cases
+      # TODO: test if circular imports are avoided
       if imp not in self.loaded_files:
-        self.loaded_files.append(imp)
+        self.loaded_files.add(imp)
         working_dir = os.path.dirname(path)
         new_path = os.path.join(working_dir, imp)
-        self.load(new_path, reset_loaded=False)
+        self.load(new_path, append=True)
 
