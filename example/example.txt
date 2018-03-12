@@ -1,4 +1,7 @@
-#import example_include.txt
+#import example_include
+
+#default
+{sentence}
 
 #noun
 carrot
@@ -21,8 +24,6 @@ render judgment upon
 {imperative} the {noun}
 {noun} is {noun}
 
-
-
 #set-var
 $var=dimestore
 $var=dotty
@@ -43,5 +44,3 @@ $var3={imperative}
 
 
 
-#default
-{sentence}
