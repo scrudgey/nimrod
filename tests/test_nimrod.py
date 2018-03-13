@@ -10,6 +10,11 @@ Tests for `nimrod` module.
 import unittest
 import nimrod
 
+class TestImports(unittest.TestCase):
+  """Test the behavior of loading"""
+  def test_load(self):
+    pass
+
 class TestSyntax(unittest.TestCase):
   """Test the main syntax features of nimrod."""
 
