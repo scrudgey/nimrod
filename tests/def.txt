@@ -1,0 +1,17 @@
+#symbol
+fresh
+
+#nested-symbol
+{symbol}
+
+#loop-symbol-1
+{loop-symbol-2}
+
+#loop-symbol-2
+{loop-symbol-1}
+
+#set-var
+$var="crescent"
+
+#lazy-def
+crescent fresh$$var
