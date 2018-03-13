@@ -43,6 +43,15 @@ class TestSyntax(unittest.TestCase):
     # test resetting variables
     self.g.reset()
     self.assertEqual(self.g.ref('var'), '')
+    # test lazy assign
+    self.g.parse('{lazy-def}')
+    self.assertEqual(self.g.ref('var'), 'crescent fresh')
+    # variables can be symbols
+    self.g.parse('{set-var-2}')
+    self.assertEqual(self.g.ref('var2'), '{symbol}')
+
+  def test_p(self):
+    pass
 
 
 if __name__ == '__main__':

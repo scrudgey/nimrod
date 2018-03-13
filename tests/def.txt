@@ -14,4 +14,7 @@ fresh
 $var="crescent"
 
 #lazy-def
-crescent fresh$$var
+crescent fresh $$var
+
+#set-var-2
+$var2="{symbol}"
