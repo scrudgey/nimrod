@@ -52,7 +52,7 @@ class Grammar(object):
     self.variables = {}
     self.loaded_files = set()
 
-  def interpret(self, symbol, parse=True):
+  def interpret(self, symbol, parse=True, depth=0):
     """Return a random element of {symbol}.
 
     OPTIONAL ARGUMENTS:
@@ -63,7 +63,7 @@ class Grammar(object):
     """
     if symbol in self.symbols:
       if parse:
-        return self.parse(random.choice(self.symbols[symbol]))
+        return self.parse(random.choice(self.symbols[symbol]), depth=depth)
       else:
         return random.choice(self.symbols[symbol])
     else:
@@ -90,8 +90,7 @@ class Grammar(object):
     self.check_file()
     # cache initial state
     initial_string = string
-
-    logging.info('parse depth {}: {}'.format(depth, string))
+    logging.info('depth {}: '.format(depth)+' '*depth+'{}'.format(string))
 
     # catch variable assignments $variable=value
     for match in self.var_assign_hook.finditer(string):
@@ -128,8 +127,9 @@ class Grammar(object):
     if kwargs:
       string = string.format(**kwargs)
 
+    logging.info('depth {}: '.format(depth)+' '*depth+'{}'.format(string))
     # recurse until we reach a stable orbit or depth limit is reached
-    if initial_string != string and depth < 10:
+    if initial_string != string and depth < 100:
       return self.parse(string, depth=depth + 1, **kwargs)
     else:
       return string
@@ -156,7 +156,7 @@ class Grammar(object):
     append: bool (default False)
       if False, clear all symbols first.
     """
-    if path[-4] != '.txt':
+    if len(path) < 4 or path[-4] != '.txt':
       path = path + '.txt'
     if not append:
       self.loaded_files = set()

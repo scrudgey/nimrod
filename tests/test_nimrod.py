@@ -27,12 +27,15 @@ class TestSyntax(unittest.TestCase):
     self.assertEqual(self.g.interpret('not-symbol'), '{not-symbol}')
 
   def test_parse(self):
+    # variables parse to pure strings
     self.assertEqual(self.g.parse('{symbol}'), 'fresh')
     self.assertEqual(self.g.parse('{nested-symbol}'), 'fresh')
     # test depth catching
     # self.assertEqual(self.g.parse('{loop-symbol-1}'), '{loop-symbol-1}')
-    # symbol doesn't exist
+    # test symbol doesn't exist
     self.assertEqual(self.g.parse('{not-symbol}'), '{not-symbol}')
+    # parse multiple symbols in one string
+    self.assertEqual(self.g.parse('{who} {do-what}'), 'we want the funk')
 
   def test_var(self):
     # test setting a variable
@@ -51,8 +54,10 @@ class TestSyntax(unittest.TestCase):
     self.assertEqual(self.g.ref('var2'), '{symbol}')
 
   def test_p(self):
-    pass
-
+    # probability 1
+    self.assertEqual(self.g.parse('<1|fresh>'), 'fresh')
+    # probability 0
+    self.assertEqual(self.g.parse('<0|fresh>'), '')
 
 if __name__ == '__main__':
   unittest.main()

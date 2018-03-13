@@ -4,6 +4,12 @@ fresh
 #nested-symbol
 {symbol}
 
+#who
+we
+
+#do-what
+want the funk
+
 #loop-symbol-1
 {loop-symbol-2}
 
