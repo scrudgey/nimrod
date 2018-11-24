@@ -111,7 +111,7 @@ real
 sublime
 useful
 
-#plur-intesifier
+#plur-intensifier
 often
 quite commonly
 , seeimingly at random,
