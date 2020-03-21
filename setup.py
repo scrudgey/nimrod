@@ -24,7 +24,7 @@ test_requirements = [
 
 setup(
     name='nimrod',
-    version='0.1.0',
+    version='0.1.1',
     description="Package for parsing randomized text generation templates.",
     long_description=readme + '\n\n' + history,
     author="Ryan Foltz",
