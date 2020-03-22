@@ -1,0 +1,78 @@
+#adjective
+jumped-up
+pompous
+smelly
+cat-in-the-hat-ass
+
+#noun
+pickle
+specter
+ghoul
+
+#adverb
+handily
+starkly
+
+#verbing
+jumping
+fucking
+sneaking
+
+#threat-verb
+stomp
+crush
+rip off
+
+#bodypart
+uvula
+head
+pinky toe
+
+
+#grossreact
+Oh, yuck!
+How gross!
+Disgusting!
+Do that somewhere else!
+You crude monster!
+
+#disturbreact
+Oh my God!
+What the hell?!
+Eeeek!
+
+#chaosreact
+Yikes!
+Whoah!
+
+#offensereact
+Hey!
+Really now!
+I am shocked!
+
+#positivereact
+Yay!
+Oh!
+
+#nuisance
+Hey! What's the big idea?
+Knock it off!
+Quit screwing around!
+
+#newenemy
+Why you!
+A wiseguy, eh?
+
+#greet-friend
+Hello, friend!
+
+#greet-enemy
+You've got some nerve coming around here!
+
+#greet-neutral
+Hello there!
+
+#cough
+Ack!
+Arg!
+Gasp! *Choke*

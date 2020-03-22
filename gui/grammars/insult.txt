@@ -1,0 +1,105 @@
+#main
+{question} {insult}, {declaration}
+{question} {declaration}, {insult}
+{insult}. {declaration}
+{insult}. <0.5|{declaration}>
+
+#insult
+I'm not afraid of a {bad-name} like you
+you {bad-name}
+Oh look, the local {bad-name} 
+
+#bad-name
+<0.2|{emphatic} >{adjective} <0.5|{adjective} >{noun}
+<0.2|{emphatic} >{participle} <0.5|{adjective} >{singular-noun}
+<0.2|{emphatic} >{participle} <0.5|{adjective} >{noun}
+
+#declaration
+get fucked
+fuck off
+eat a dick
+you can go {verb} a {noun}
+why don't you {verb} a {noun}
+
+#question
+what {location} {location-action}?
+who's this {singular-noun}?
+
+#emphatic
+absolute
+total
+complete
+world-class
+class-act
+transparent
+
+#adjective
+bitchmade
+trifling
+jumped-up
+ugly
+little
+milquetoast
+snotty
+lunatic
+disgusting
+repulsive
+
+#participle
+{noun}-{verbing} 
+{noun}-looking
+{celebrity}-looking
+bottom-feeding
+
+#verbing
+fucking
+sucking
+worshipping
+feeding
+
+#singular-noun
+blowjob
+toilet person
+swamp creature
+nerf herder
+ignoramus
+motherfucker
+dumpster fire
+
+#noun
+runt
+pickle
+shit
+scum
+clown
+
+#verb
+fuck
+piss up
+eat
+
+#celebrity
+Cary Grant
+Julia Child
+Bob Saget
+Steve Buscemi
+
+#bad-person
+my dead grandmother
+hitler
+mussolini
+a gay robot
+
+#location
+sewer
+geriatric home
+cesspit
+graveyard
+insane asylum
+
+#location-action
+did you crawl out from
+do you hail from
+do you call home
+did you escape from
+are you on your way to rob

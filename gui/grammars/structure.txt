@@ -1,0 +1,27 @@
+#insult
+You {adjective} {noun}!
+You {adverb} {verbing} {noun}!
+
+#threat
+I am going to {threat-verb} your {bodypart}!
+Time to {threat-verb}<0.5| and {threat-verb}> your {bodypart}!
+
+#punchsay
+<0.1|{punchex}>
+
+
+
+#pain-physical
+Ouch!
+Ow!
+Owie!
+Oof!
+
+#pain-fire
+Yow!
+Hot!
+That burns!
+
+#punchex
+Take that!
+Ha!

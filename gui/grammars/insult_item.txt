@@ -1,0 +1,11 @@
+% provided by context: target-item
+
+#insult
+you and your little {target-item} that you love so much
+do you take that {target-item} home and {item-activity}?
+you can shove that {target-item} up your ass
+
+#item-activity
+shove it up your ass
+cuddle with it
+sing it a song

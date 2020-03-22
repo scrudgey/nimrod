@@ -1,0 +1,16 @@
+% provied by context: target-clothes
+
+#insult
+your shirt look like a dishrag
+that {target-clothes} looks like something {bad-person} would wear
+still robbing graveyards for that {target-clothes}, I see
+nice {target-clothes}
+
+#question
+where did you get that {target-clothes}? at the {store-type} ?
+
+#store-type
+clown store
+hitler store
+trash picker store
+kindergarten art sale 

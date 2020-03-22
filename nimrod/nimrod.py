@@ -46,7 +46,7 @@ class Grammar(object):
     """
     symbol_hook = re.compile(r'(\{(.+?)\})')
     prob_hook = re.compile(r'(<([\.\d]+)\|(.+?)>)')
-    either_hook = re.compile(r'(<([\.\d]+)\|(.+?)\|(.+?)>)')
+    either_hook = re.compile(r'(<([\.\d]*)\|([^\|>]*)\|([^\|>]*)>)')
     var_ref_hook = re.compile(r'\$(\w+)')
     var_assign_hook = re.compile(r'(\W|^)\$(\w+)="(.+)"')
     var_lazy_assign_hook = re.compile(r' \$\$(\w+)$')

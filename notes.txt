@@ -1,0 +1,5 @@
+include a thing that checks that all references are resolvable
+
+something to prevent duplicates?
+
+assign multiple variables in one go
